@@ -1,0 +1,12 @@
+{
+    "batch_size": 50,
+    "emb_dim": 51,
+    "hidden_size": 200,
+    "training_steps": 60,
+    "num_layers": 100,
+    "cell": "MultiRNNCell",
+    "loss": "mean_squared_error",
+    "optimizer": "AdamOptimizer",
+    "train_writer": "summaries/train",
+    "test_writer": "summaries/test"
+}

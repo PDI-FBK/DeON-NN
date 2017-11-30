@@ -1,0 +1,16 @@
+# NOTA BENE: the proper tensorflow version (gpu or cpu)
+# must be installed BEFORE since it is platform dependent
+# so also the dependencies (e.g. numpy, protobuf, ecc.)
+# are actually ignored in the current requirements file.
+
+# all the requirements are listed in setup.py
+-e .
+
+# requires mock to run the tests
+mock==2.0.0
+pytest==3.3.0
+click
+
+# install ipython and pylint
+pylint==1.7.2
+ipython==6.1.0

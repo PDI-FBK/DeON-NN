@@ -1,0 +1,10 @@
+*.pyc
+.py3venv
+.vscode/.ropeproject
+DUMP
+.log
+build
+.cache
+.eggs
+deon.egg-info
+dist
