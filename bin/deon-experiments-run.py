@@ -4,14 +4,16 @@
 
 import click
 import json
-from rnn.rnn import Rnn
+from rnn.main import Main
+import os
 
 
 @click.command()
-@click.argument('config', type=click.File('r'))
+@click.option('--config')
 def run(config):
-    config = json.loads(config.read())
-    Rnn(config).run()
+    basedir, _ = tuple(os.path.split(config))
+    config = json.load(open(config))
+    Main(config).run(basedir)
     pass
 
 if __name__ == '__main__':

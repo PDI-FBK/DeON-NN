@@ -1,4 +1,6 @@
 {
+    "name": "simple-test",
+    "dataset": "../dataset/simple-test",
     "batch_size": 50,
     "emb_dim": 51,
     "hidden_size": 200,
