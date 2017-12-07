@@ -1,0 +1,10 @@
+1	effectiveness by this method are ambiguities caused by more than one translation of a query term and failures to translate phrases during query translation .	?	?	1	w00
+2	NACSIS test collection I ( NTCIR , 1999 ) , which consists of a collection of abstracts of scientific papers ( 330 ,000 records , 590MB in text ) , two sets of topic description ( 30 topics for training and 53 topics for evaluation ) and relevance judgement , provides us of a good opportunity for this purpose .	?	?	1	w00
+3	By partial parsing and skip strategy , this parser can handle long , complicated , or even faulty sentences .	?	?	0	w00
+4	The corpus we use in our experinaent is a relative small corpus about computer handbook , in which the terms are translated with high consistency .	?	?	0	w00
+5	Domain Knowledge Management in general involves three steps .	?	?	0	w00
+6	In Table 4 , 'Num ~ denotes the number of documents in a set .	?	?	0	w00
+7	They report that the accuracy thus obtained is higher than when applying the same statistical measures to the original text .	?	?	0	w00
+8	In other words , W* = arg max P ( WIA ) = arg max P ( AI W ) Pr ( W ) where W is the string of words , wl , ... , wn , and A is the acoustic evidence ( Jelinek 1998 ) .	?	?	1	w00
+9	Our work exploits chunking in two principal ways .	?	?	0	w00
+10	We will use the artificial dataset given in Fig 4 which displays 4 different patterns of gap threading .	?	?	0	w00

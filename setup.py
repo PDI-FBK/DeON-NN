@@ -13,5 +13,4 @@ setup(name='deon',
       install_requires=[],
       dependency_links=[],
       zip_safe=False,
-      tests_require=['pytest'],
-      setup_requires=['pytest-runner'])
+      test_suite='test')

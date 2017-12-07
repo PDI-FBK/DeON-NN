@@ -10,10 +10,11 @@ import os
 
 @click.command()
 @click.option('--config')
-def run(config):
+@click.option('--force', is_flag=True)
+def run(config, force):
     basedir, _ = tuple(os.path.split(config))
     config = json.load(open(config))
-    Main(config).run(basedir)
+    Main(config).run(basedir, force)
     pass
 
 if __name__ == '__main__':
