@@ -11,6 +11,10 @@ class Config():
         self.summaries = os.path.join(basedir, config['summaries'])
         self.test_checkpoint = config['test_checkpoint']
         self.num_layers = config['num_layers']
+
         self.vocab_input_size = config['vocab_input_size']
         self.vocab_ouput_size = config['vocab_ouput_size']
-        self.dataset_path = os.path.join(basedir, config['dataset'])
+
+        self.train_file = os.path.join(basedir, config['train.files'])
+        self.test_file = os.path.join(basedir, config['test.files'])
+        self.eval_file = os.path.join(basedir, config['eval.files'])

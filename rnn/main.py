@@ -10,11 +10,10 @@ class Main(object):
         self.sess = tf.Session()
         self.config = config
 
-        rio_file = os.path.join(config.dataset_path, 'validation.tsv.rio')
-        self.tensor = data.inputs([rio_file], config.batch_size)
+        train_tensor = data.inputs([self.config.train_file], config.batch_size)
 
-        y = self.tensor['definition']
-        logits = self._get_logits(self.tensor['words'], self.tensor['sentence_length'])
+        y = train_tensor['definition']
+        logits = self._get_logits(train_tensor['words'], train_tensor['sentence_length'])
 
         predictions = tf.sigmoid(logits)
         predictions = tf.reshape(predictions, [-1])
