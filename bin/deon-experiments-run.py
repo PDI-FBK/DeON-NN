@@ -5,6 +5,7 @@
 import click
 import json
 from rnn.main import Main
+from rnn.config import Config
 import os
 
 
@@ -13,8 +14,9 @@ import os
 @click.option('--force', is_flag=True)
 def run(config, force):
     basedir, _ = tuple(os.path.split(config))
-    config = json.load(open(config))
-    Main(config).run(basedir, force)
+    config = Config(json.load(open(config)), basedir)
+
+    Main(config).run(force)
     pass
 
 if __name__ == '__main__':
