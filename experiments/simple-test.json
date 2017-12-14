@@ -15,5 +15,6 @@
     "test.files": "../dataset/simple-test/test.tsv.rio",
     "eval.files": "../dataset/simple-test/validation.tsv.rio",
 
-    "seed": 23
+    "seed": 23,
+    "cell_type": "BasicLSTMCell"
 }

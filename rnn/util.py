@@ -1,12 +1,14 @@
 import tensorflow as tf
 
 
-def build_inner_cell(hidden_size):
-    return tf.contrib.rnn.BasicLSTMCell(hidden_size, forget_bias=0.0, state_is_tuple=True)
+def build_inner_cell(hidden_size, celltype):
+    if celltype == "BasicLSTMCell":
+        return tf.contrib.rnn.BasicLSTMCell(hidden_size, forget_bias=0.0, state_is_tuple=True)
+    raise Exception(celltype, "not implemented.")
 
 
-def multi_rnn_cell(hidden_size, num_layers):
-    cells = [build_inner_cell(hidden_size) for _ in range(0, num_layers)]
+def multi_rnn_cell(hidden_size, num_layers, celltype):
+    cells = [build_inner_cell(hidden_size, celltype) for _ in range(0, num_layers)]
     return tf.contrib.rnn.MultiRNNCell(cells=cells, state_is_tuple=True)
 
 

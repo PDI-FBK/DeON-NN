@@ -24,3 +24,4 @@ class Config():
         self.eval_file = os.path.join(basedir, config['eval.files'])
 
         self.seed = config['seed']
+        self.cell_type = config['cell_type']

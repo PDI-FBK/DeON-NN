@@ -102,7 +102,7 @@ class Model(object):
             [self.config.vocab_input_size, self.config.emb_dim])
         embedding_layer = tf.nn.embedding_lookup(embeddings, x)
 
-        cell = util.multi_rnn_cell(self.config.hidden_size, self.config.num_layers)
+        cell = util.multi_rnn_cell(self.config.hidden_size, self.config.num_layers, self.config.cell_type)
 
         output, state = tf.nn.dynamic_rnn(cell, embedding_layer,
                                           sequence_length=lengths,
