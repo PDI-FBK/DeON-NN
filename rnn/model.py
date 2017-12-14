@@ -16,14 +16,13 @@ class Model(object):
 
     def __init__(self, model_type, config, graph):
         checkpoint = tf.train.latest_checkpoint(config.checkpoint_dir)
-        saver = tf.train.Saver()
         self.sess = tf.Session()
         print('===>', checkpoint)
-        if checkpoint is not None:
-            saver.restore(self.sess, checkpoint)
 
         self.config = config
         self.graph = graph
+
+
 
         tensor = self._get_tensor(model_type)
 
@@ -54,6 +53,12 @@ class Model(object):
         self.tvars = tf.trainable_variables()
 
         self.summary_path = os.path.join(self.config.summaries, model_type.value)
+
+        with self.graph.as_default():
+            saver = tf.train.Saver()
+            if checkpoint is not None:
+                saver.restore(self.sess, checkpoint)
+
         return
 
     def next(self):
@@ -98,26 +103,25 @@ class Model(object):
         return data.inputs([self.config.eval_file], self.config.batch_size, True, 1)
 
     def _get_logits(self, x, lengths, scope_name):
-        with tf.variable_scope(scope_name):
-            embeddings = tf.get_variable('embedding',
-                [self.config.vocab_input_size, self.config.emb_dim])
-            embedding_layer = tf.nn.embedding_lookup(embeddings, x)
+        embeddings = tf.get_variable('embedding',
+            [self.config.vocab_input_size, self.config.emb_dim])
+        embedding_layer = tf.nn.embedding_lookup(embeddings, x)
 
-            cell = util.multi_rnn_cell(self.config.hidden_size, self.config.num_layers)
+        cell = util.multi_rnn_cell(self.config.hidden_size, self.config.num_layers)
 
-            output, state = tf.nn.dynamic_rnn(cell, embedding_layer,
-                                              sequence_length=lengths,
-                                              initial_state=cell.zero_state(tf.shape(embedding_layer)[0], tf.float32))
-            output = util.extract_axis(output, lengths - 1)
+        output, state = tf.nn.dynamic_rnn(cell, embedding_layer,
+                                          sequence_length=lengths,
+                                          initial_state=cell.zero_state(tf.shape(embedding_layer)[0], tf.float32))
+        output = util.extract_axis(output, lengths - 1)
 
-            softmax_w = tf.get_variable('softmax_w',
-                [self.config.hidden_size, self.config.vocab_ouput_size], dtype=tf.float32)
+        softmax_w = tf.get_variable('softmax_w',
+            [self.config.hidden_size, self.config.vocab_ouput_size], dtype=tf.float32)
 
-            softmax_b = tf.get_variable('softmax_b',
-                [self.config.vocab_ouput_size], dtype=tf.float32)
+        softmax_b = tf.get_variable('softmax_b',
+            [self.config.vocab_ouput_size], dtype=tf.float32)
 
-            logits = tf.matmul(output, softmax_w) + softmax_b
-            return logits
+        logits = tf.matmul(output, softmax_w) + softmax_b
+        return logits
 
 
     def _save_ckpt(self, step):
