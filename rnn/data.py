@@ -14,7 +14,7 @@ def parse(serialized):
         SENTENCE_LENGTH_KEY: tf.FixedLenFeature([], tf.int64),
         DEF_LENGTH_KEY: tf.FixedLenFeature([], tf.int64),
         WORDS_KEY: tf.VarLenFeature(tf.int64),
-        DEF_KEY: tf.VarLenFeature(tf.float32),
+        DEF_KEY: tf.VarLenFeature(tf.int64),
     }
     parsed = tf.parse_single_example(
         serialized=serialized,
