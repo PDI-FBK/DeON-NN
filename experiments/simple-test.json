@@ -1,14 +1,17 @@
 {
     "name": "simple-test",
-    "dataset": "../dataset/simple-test",
     "batch_size": 50,
-    "emb_dim": 51,
-    "hidden_size": 200,
-    "training_steps": 60,
-    "num_layers": 100,
-    "cell": "MultiRNNCell",
-    "loss": "mean_squared_error",
-    "optimizer": "AdamOptimizer",
-    "train_writer": "summaries/train",
-    "test_writer": "summaries/test"
+    "emb_dim": 256,
+    "hidden_size": 10,
+    "training_steps": 5,
+    "num_layers": 10,
+    "vocab_input_size": 589598,
+    "vocab_ouput_size": 1,
+
+    "summaries": "../dataset/simple-test/summaries",
+    "checkpoint": "../dataset/simple-test/checkpoint",
+
+    "train.files": "../dataset/simple-test/train.tsv.rio",
+    "test.files": "../dataset/simple-test/test.tsv.rio",
+    "eval.files": "../dataset/simple-test/validation.tsv.rio"
 }
