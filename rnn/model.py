@@ -17,12 +17,8 @@ class Model(object):
     def __init__(self, model_type, config, graph):
         checkpoint = tf.train.latest_checkpoint(config.checkpoint_dir)
         self.sess = tf.Session()
-        print('===>', checkpoint)
-
         self.config = config
         self.graph = graph
-
-
 
         tensor = self._get_tensor(model_type)
 
@@ -86,7 +82,6 @@ class Model(object):
                 coord.request_stop(ex=oore)
             finally:
                 flag = False
-                #self._writer.flush()
                 coord.request_stop()
                 coord.join(threads)
 
@@ -97,10 +92,10 @@ class Model(object):
 
     def _get_tensor(self, model_type):
         if model_type == ModelType.TRAIN:
-            return data.inputs([self.config.train_file], self.config.batch_size, True, 1)
+            return data.inputs([self.config.train_file], self.config.batch_size, True, 1, self.config.seed)
         if model_type == ModelType.TEST:
-            return data.inputs([self.config.test_file], self.config.batch_size, True, 1)
-        return data.inputs([self.config.eval_file], self.config.batch_size, True, 1)
+            return data.inputs([self.config.test_file], self.config.batch_size, True, 1, self.config.seed)
+        return data.inputs([self.config.eval_file], self.config.batch_size, True, 1, self.config.seed)
 
     def _get_logits(self, x, lengths, scope_name):
         embeddings = tf.get_variable('embedding',

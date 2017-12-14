@@ -22,3 +22,5 @@ class Config():
         self.train_file = os.path.join(basedir, config['train.files'])
         self.test_file = os.path.join(basedir, config['test.files'])
         self.eval_file = os.path.join(basedir, config['eval.files'])
+
+        self.seed = config['seed']

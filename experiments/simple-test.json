@@ -13,5 +13,7 @@
 
     "train.files": "../dataset/simple-test/train.tsv.rio",
     "test.files": "../dataset/simple-test/test.tsv.rio",
-    "eval.files": "../dataset/simple-test/validation.tsv.rio"
+    "eval.files": "../dataset/simple-test/validation.tsv.rio",
+
+    "seed": 23
 }
