@@ -1,4 +1,4 @@
-from rnn.my_model import Model
+from rnn.model import Model
 from rnn.logits import Logits
 import rnn.data as data
 import os

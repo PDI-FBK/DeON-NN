@@ -1,6 +1,5 @@
-from rnn.model import Model
-from rnn.model import ModelType
-import tensorflow as tf
+from rnn.train import Train
+from rnn.test import Test
 
 
 class Main(object):
@@ -10,8 +9,7 @@ class Main(object):
 
         self.training_steps = config.training_steps
         self.model_checkpoint = config.model_checkpoint
-        with tf.Graph().as_default() as graph:
-            self.train_model = Model(ModelType.TRAIN, config, graph)
+        self.train_model = Train(config)
 
     def run(self, force):
         for step in self.train_model.next():
@@ -21,7 +19,6 @@ class Main(object):
                 self._run_all_test_model()
 
     def _run_all_test_model(self):
-        with tf.Graph().as_default() as graph:
-            test_model = Model(ModelType.TEST, self.config, graph)
-            for step in test_model.next():
-                print(step)
+        test_model = Test(self.config)
+        for step in test_model.next():
+            print(step)

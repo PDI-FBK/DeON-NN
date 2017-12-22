@@ -1,4 +1,4 @@
-from rnn.my_model import Model
+from rnn.model import Model
 from rnn.logits import Logits
 import rnn.data as data
 import os
@@ -10,7 +10,7 @@ class Test(Model):
     def __init__(self, config):
         with tf.Graph().as_default() as graph:
             super().__init__(config.checkpoint_dir)
-            self.summary_path = os.path.join(config.summaries, 'train')
+            self.summary_path = os.path.join(config.summaries, 'test')
 
             tensor = self._get_tensor(config)
             y = tensor['definition']
