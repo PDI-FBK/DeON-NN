@@ -8,15 +8,17 @@ import tensorflow as tf
 class Test(Model):
 
     def __init__(self, config):
-        super().__init__(config.checkpoint_dir)
-        self.summary_path = os.path.join(config.summaries, 'train')
+        with tf.Graph().as_default() as graph:
+            super().__init__(config.checkpoint_dir)
+            self.summary_path = os.path.join(config.summaries, 'train')
 
-        tensor = self._get_tensor()
-        y = tensor['definition']
-        logits = Logits().build()
-        self.build(y, logits)
+            tensor = self._get_tensor(config)
+            y = tensor['definition']
+            real_ouput = tf.cast(tf.reshape(y, [-1]), tf.float32)
+            logits = Logits(config).build(tensor['words'], tensor['sentence_length'])
+            self.build(real_ouput, logits)
 
-    def step(self, merged):
+    def step(self):
         res = self.sess.run([
             self.accuracy,
             self.tvars,
@@ -24,10 +26,10 @@ class Test(Model):
             self.global_step])
         return res
 
-    def _get_tensor(self):
+    def _get_tensor(self, config):
         return data.inputs(
-            [self.config.train_file],
-            self.config.batch_size,
+            [config.train_file],
+            config.batch_size,
             True,
             1,
-            self.config.seed)
+            config.seed)

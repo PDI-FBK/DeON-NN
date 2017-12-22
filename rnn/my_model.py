@@ -4,8 +4,8 @@ import tensorflow as tf
 class Model(object):
     """this model construct the graph of the rnn"""
     def __init__(self, checkpoint_dir):
-        self.sess = None
-        self.graph = None
+        self.sess = tf.Session()
+        self.graph = tf.get_default_graph()
         self.loss = None
         self.accuracy = None
         self.global_step = None
@@ -28,8 +28,8 @@ class Model(object):
             try:
                 while flag:
                     res = self.step()
-                    summary_writer.add_summary(res[4], res[5])
-                    yield res
+                    summary_writer.add_summary(res[-2])
+                    yield res[-1]
             except tf.errors.OutOfRangeError as oore:
                 coord.request_stop(ex=oore)
             finally:
@@ -47,10 +47,12 @@ class Model(object):
         self._restore_from_checkpoint()
         pass
 
+    def save_checkpoint(self, checkpoint_path, step):
+        saver = tf.train.Saver()
+        return saver.save(self.sess, checkpoint_path, global_step=step)
+
     def _initialize(self, real_ouput, predictions):
-        self.sess = tf.Session()
-        self.graph = tf.get_default_graph()
-        self.global_step = self.get_or_create_global_step(graph=self.graph)
+        self.global_step = self._get_or_create_global_step(graph=self.graph)
         self.loss = self._init_loss(real_ouput, predictions)
         self.accuracy = self._init_accuracy(real_ouput, predictions)
         self.optimizer = self._init_optimizer(self.loss, self.global_step)
@@ -58,15 +60,15 @@ class Model(object):
         self.tvars = tf.trainable_variables()
         pass
 
-    def _summary_scalar(self):
+    def _add_summary_scalar(self):
         tf.summary.scalar('accuracy', self.accuracy)
         tf.summary.scalar('loss', self.loss)
 
     def _restore_from_checkpoint(self):
         with self.graph.as_default():
             saver = tf.train.Saver()
-            if self.checkpoint is not None:
-                saver.restore(self.sess, self.checkpoint)
+            if self._checkpoint is not None:
+                saver.restore(self.sess, self._checkpoint)
 
     def _init_loss(self, real_ouput, predictions):
         return tf.losses.mean_squared_error(
@@ -108,4 +110,3 @@ class Model(object):
         for global_step in collection:
             return global_step
         return None
-
