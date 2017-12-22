@@ -24,14 +24,14 @@ class Logits():
         logits = tf.matmul(output, softmax_w) + softmax_b
         return logits
 
-    def _get_embeddings(input_size, emb_dim):
+    def _get_embeddings(self, input_size, emb_dim):
         return tf.get_variable('embedding', [input_size, emb_dim])
 
-    def _get_softmax_w(hidden_size, output_size):
+    def _get_softmax_w(self, hidden_size, output_size):
         return tf.get_variable(
             'softmax_w', [hidden_size, output_size], dtype=tf.float32)
 
-    def _get_softmax_b(output_size):
+    def _get_softmax_b(self, output_size):
         return tf.get_variable('softmax_b', [output_size], dtype=tf.float32)
 
     def _get_output(self, embedding_layer, tensor_length):
