@@ -14,7 +14,7 @@ class Main(object):
     def run(self, force):
         for step in self.train_model.next():
             if step % self.training_steps == 0:
-                print(step)
+                # print(step)
                 self.train_model.save_checkpoint(self.model_checkpoint, step)
                 self._run_all_test_model()
 

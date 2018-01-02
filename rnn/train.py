@@ -11,11 +11,11 @@ class Train(Model):
         with tf.Graph().as_default() as graph:
             super().__init__(config.checkpoint_dir)
             self.summary_path = os.path.join(config.summaries, 'train')
+            self.device = 'GPU:0'
 
             tensor = self._get_tensor(config)
             y = tensor['definition']
             real_ouput = tf.cast(tf.reshape(y, [-1]), tf.float32)
-            # self.graph = graph
             logits = Logits(config).build(tensor['words'], tensor['sentence_length'])
             self.build(real_ouput, logits)
 
@@ -36,3 +36,4 @@ class Train(Model):
             True,
             1,
             config.seed)
+

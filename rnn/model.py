@@ -1,4 +1,5 @@
 import tensorflow as tf
+import logging
 
 
 class Model(object):
@@ -12,6 +13,7 @@ class Model(object):
         self.tvars = None
         self.summary_op = None
         self.summary_path = None
+        self.device = None
         self._checkpoint = tf.train.latest_checkpoint(checkpoint_dir)
 
     def next(self):
@@ -27,6 +29,7 @@ class Model(object):
 
             try:
                 while flag:
+                    logging.info('trying to build ...')
                     res = self.step()
                     summary_writer.add_summary(res[-2])
                     yield res[-1]
@@ -96,10 +99,12 @@ class Model(object):
             return tf.summary.merge_all()
 
     def _get_or_create_global_step(self, graph=None):
+        device = 'CPU:0'
+
         graph = graph or tf.get_default_graph()
         global_step = self._get_global_step(graph=graph)
         if global_step is None:
-            with graph.as_default():
+            with graph.as_default(), tf.device(device):
                 global_step = tf.Variable(0, trainable=False, dtype=tf.int64, name='global_step')
                 graph.add_to_collection(tf.GraphKeys.GLOBAL_STEP, global_step)
         return global_step
@@ -110,3 +115,6 @@ class Model(object):
         for global_step in collection:
             return global_step
         return None
+
+
+

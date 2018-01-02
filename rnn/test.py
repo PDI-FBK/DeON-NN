@@ -11,6 +11,7 @@ class Test(Model):
         with tf.Graph().as_default() as graph:
             super().__init__(config.checkpoint_dir)
             self.summary_path = os.path.join(config.summaries, 'test')
+            self.device = 'CPU:0'
 
             tensor = self._get_tensor(config)
             y = tensor['definition']
