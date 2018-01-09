@@ -1,4 +1,5 @@
 import os
+import logging
 
 
 class Config():
@@ -28,3 +29,14 @@ class Config():
 
         self.train_device = config["train.device"]
         self.test_device = config["test.device"]
+
+        self.logger = self._logging_setup(config["logdir"])
+
+    def _logging_setup(self, fpath):
+        logger = logging.getLogger('deon-rnn')
+        hdlr = logging.FileHandler(fpath, mode='a')
+        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+        hdlr.setFormatter(formatter)
+        logger.addHandler(hdlr)
+        logger.setLevel(logging.DEBUG)
+        return logger

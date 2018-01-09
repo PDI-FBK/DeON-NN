@@ -16,6 +16,7 @@ class Model(object):
         self.tvars = None
         self.summary_op = None
         self.summary_path = None
+        self.logger = logging
         self._checkpoint = tf.train.latest_checkpoint(checkpoint_dir)
 
     def next(self):
@@ -31,7 +32,6 @@ class Model(object):
 
             try:
                 while flag:
-                    logging.info('trying to build ...')
                     res = self.step()
                     summary_writer.add_summary(res[-2])
                     yield res[-1]

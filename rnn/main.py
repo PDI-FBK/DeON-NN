@@ -10,15 +10,17 @@ class Main(object):
         self.training_steps = config.training_steps
         self.model_checkpoint = config.model_checkpoint
         self.train_model = Train(config)
+        self.logger = config.logger
 
     def run(self, force):
-        print(' === train === ')
+        self.logger.info('Training')
         for step in self.train_model.next():
             if step % self.training_steps == 0:
                 self.train_model.save_checkpoint(self.model_checkpoint, step)
                 self._run_all_test_model()
 
     def _run_all_test_model(self):
+        self.logger.info('Testing')
         test_model = Test(self.config)
         for step in test_model.next():
             pass

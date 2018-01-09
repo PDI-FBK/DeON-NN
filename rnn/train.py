@@ -9,6 +9,7 @@ class Train(Model):
         with tf.Graph().as_default(), tf.device(config.train_device):
             super().__init__(config.checkpoint_dir)
             self.summary_path = os.path.join(config.summaries, 'train')
+            self.logger = config.logger
             self.build(config)
 
     def step(self):

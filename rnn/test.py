@@ -12,6 +12,7 @@ class Test(Model):
         with tf.Graph().as_default(), tf.device(config.test_device):
             super().__init__(config.checkpoint_dir)
             self.summary_path = os.path.join(config.summaries, "test")
+            self.logger = config.logger
             self.build(config)
 
     def step(self):
