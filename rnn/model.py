@@ -1,11 +1,14 @@
 import tensorflow as tf
 import logging
+from tensorflow.python import debug as tf_debug
+from rnn.logits import Logits
+import rnn.data as data
 
 
 class Model(object):
     """this model construct the graph of the rnn"""
     def __init__(self, checkpoint_dir):
-        self.sess = tf.Session()
+        self.sess = tf.Session() #tf_debug.LocalCLIDebugWrapperSession(tf.Session())
         self.graph = tf.get_default_graph()
         self.loss = None
         self.accuracy = None
@@ -13,7 +16,6 @@ class Model(object):
         self.tvars = None
         self.summary_op = None
         self.summary_path = None
-        self.device = None
         self._checkpoint = tf.train.latest_checkpoint(checkpoint_dir)
 
     def next(self):
@@ -43,7 +45,12 @@ class Model(object):
     def step(self):
         raise NotImplementedError
 
-    def build(self, real_ouput, logits):
+    def build(self, config):
+        tensor = self._get_tensor(config)
+        x = tensor['words']
+        y = tensor['definition']
+        real_ouput = tf.cast(tf.reshape(y, [-1]), tf.float32)
+        logits = Logits(config).build(x, tensor['sentence_length'])
         predictions = self._init_prediction(logits)
         self._initialize(real_ouput, predictions)
         self._add_summary_scalar()
@@ -116,5 +123,10 @@ class Model(object):
             return global_step
         return None
 
-
-
+    def _get_tensor(self, config):
+        return data.inputs(
+            [config.train_file],
+            config.batch_size,
+            True,
+            1,
+            config.seed)

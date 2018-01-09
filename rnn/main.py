@@ -12,13 +12,13 @@ class Main(object):
         self.train_model = Train(config)
 
     def run(self, force):
+        print(' === train === ')
         for step in self.train_model.next():
             if step % self.training_steps == 0:
-                # print(step)
                 self.train_model.save_checkpoint(self.model_checkpoint, step)
                 self._run_all_test_model()
 
     def _run_all_test_model(self):
         test_model = Test(self.config)
         for step in test_model.next():
-            print(step)
+            pass
