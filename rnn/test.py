@@ -9,9 +9,9 @@ class Test(Model):
 
         self._max = 0
 
-        with tf.Graph().as_default() as graph, tf.device('CPU:0'):
+        with tf.Graph().as_default(), tf.device(config.test_device):
             super().__init__(config.checkpoint_dir)
-            self.summary_path = os.path.join(config.summaries, 'test')
+            self.summary_path = os.path.join(config.summaries, "test")
             self.build(config)
 
     def step(self):

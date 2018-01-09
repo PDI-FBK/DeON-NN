@@ -25,3 +25,6 @@ class Config():
 
         self.seed = config['seed']
         self.cell_type = config['cell_type']
+
+        self.train_device = config["train.device"]
+        self.test_device = config["test.device"]

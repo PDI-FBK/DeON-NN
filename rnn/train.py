@@ -6,7 +6,7 @@ import tensorflow as tf
 class Train(Model):
 
     def __init__(self, config):
-        with tf.Graph().as_default() as graph, tf.device('CPU:0'):
+        with tf.Graph().as_default(), tf.device(config.train_device):
             super().__init__(config.checkpoint_dir)
             self.summary_path = os.path.join(config.summaries, 'train')
             self.build(config)
@@ -20,5 +20,3 @@ class Train(Model):
             self.summary_op,
             self.global_step])
         return res
-
-
