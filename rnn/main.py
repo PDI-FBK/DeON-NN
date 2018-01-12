@@ -7,7 +7,7 @@ class Main(object):
     def __init__(self, config):
         self.config = config
 
-        self.training_steps = config.training_steps
+        self.validate_every_steps = config.validate_every_steps
         self.model_checkpoint = config.model_checkpoint
         self.train_model = Train(config)
         self.logger = config.logger
@@ -15,7 +15,7 @@ class Main(object):
     def run(self, force):
         self.logger.info('Start')
         for step in self.train_model.next():
-            if step % self.training_steps == 0:
+            if step % self.validate_every_steps == 0:
                 self.logger.info('Saving checkpoint into {}'.format(self.model_checkpoint))
                 self.train_model.save_checkpoint(self.model_checkpoint, step)
                 self._run_all_test_model()

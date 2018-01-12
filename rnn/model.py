@@ -23,6 +23,7 @@ class Model(object):
         with self.sess as sess:
             summary_writer = tf.summary.FileWriter(
                 self.summary_path, sess.graph)
+            summary_writer.flush()
             sess.run(tf.global_variables_initializer())
             sess.run(tf.local_variables_initializer())
 
@@ -38,6 +39,7 @@ class Model(object):
             except tf.errors.OutOfRangeError as oore:
                 coord.request_stop(ex=oore)
             finally:
+                summary_writer.flush()
                 flag = False
                 coord.request_stop()
                 coord.join(threads)
@@ -54,6 +56,7 @@ class Model(object):
         predictions = self._init_prediction(logits)
         self._initialize(real_ouput, predictions)
         self._add_summary_scalar()
+        self.summary_op = self._build_summary()
         self._restore_from_checkpoint()
         pass
 
@@ -67,7 +70,6 @@ class Model(object):
         self.loss = self._init_loss(real_ouput, predictions)
         self.accuracy = self._init_accuracy(real_ouput, predictions)
         self.optimizer = self._init_optimizer(self.loss, self.global_step)
-        self.summary_op = self._build_summary()
         self.tvars = tf.trainable_variables()
         pass
 
@@ -132,5 +134,5 @@ class Model(object):
                 [config.train_file],
                 config.batch_size,
                 True,
-                1,
+                config.epochs,
                 config.seed)

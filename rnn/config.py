@@ -13,7 +13,8 @@ class Config():
         self.summaries = os.path.join(
             basedir, config['summaries'] + '/' + config['name'])
 
-        self.training_steps = config['training_steps']
+        self.validate_every_steps = config['validate_every_steps']
+        self.epochs = config['epochs']
 
         self.checkpoint_dir = os.path.join(basedir, config['checkpoint'])
         self.model_checkpoint = os.path.join(self.checkpoint_dir, 'MODEL')
@@ -41,3 +42,4 @@ class Config():
         logger.addHandler(hdlr)
         logger.setLevel(logging.DEBUG)
         return logger
+
