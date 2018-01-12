@@ -25,3 +25,8 @@ class Test(Model):
         self.total_accuracy += res[0]
         self.count_accuracy += 1
         return res
+
+    def mean_accuracy(self):
+        if self.count_accuracy > 0:
+            return self.total_accuracy / self.count_accuracy
+        return 0

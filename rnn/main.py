@@ -27,5 +27,5 @@ class Main(object):
             pass
         if test_model.count_accuracy > 0:
             self.logger.info('Test mean_accuracy={}'
-                .format(test_model.total_accuracy / test_model.count_accuracy))
+                .format(test_model.mean_accuracy))
 
