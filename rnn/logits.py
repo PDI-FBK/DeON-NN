@@ -12,13 +12,14 @@ class Logits():
         self.cell_type = config.cell_type
 
     def build(self, tensor_input, tensor_length):
-        embeddings = self._get_embeddings(
-            self.vocab_input_size, self.emb_dim)
-        softmax_w = self._get_softmax_w(
-            self.hidden_size, self.vocab_ouput_size)
-        softmax_b = self._get_softmax_b(self.vocab_ouput_size)
+        with tf.device('CPU:0'):
+            embeddings = self._get_embeddings(
+                self.vocab_input_size, self.emb_dim)
+            softmax_w = self._get_softmax_w(
+                self.hidden_size, self.vocab_ouput_size)
+            softmax_b = self._get_softmax_b(self.vocab_ouput_size)
+            embedding_layer = tf.nn.embedding_lookup(embeddings, tensor_input)
 
-        embedding_layer = tf.nn.embedding_lookup(embeddings, tensor_input)
         output = self._get_output(embedding_layer, tensor_length)
 
         logits = tf.matmul(output, softmax_w) + softmax_b
@@ -39,7 +40,9 @@ class Logits():
             self.hidden_size, self.num_layers, self.cell_type)
 
         output, state = tf.nn.dynamic_rnn(
-            cell, embedding_layer, sequence_length=tensor_length,
+            cell,
+            embedding_layer,
+            sequence_length=tensor_length,
             initial_state=cell.zero_state(tf.shape(embedding_layer)[0], tf.float32))
         return self._extract_axis(output, tensor_length - 1)
 

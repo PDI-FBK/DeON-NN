@@ -1,6 +1,5 @@
 import tensorflow as tf
 import logging
-from tensorflow.python import debug as tf_debug
 from rnn.logits import Logits
 import rnn.data as data
 
@@ -8,7 +7,8 @@ import rnn.data as data
 class Model(object):
     """this model construct the graph of the rnn"""
     def __init__(self, checkpoint_dir):
-        self.sess = tf.Session() #tf_debug.LocalCLIDebugWrapperSession(tf.Session())
+        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.5)
+        self.sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, allow_soft_placement=True))
         self.graph = tf.get_default_graph()
         self.loss = None
         self.accuracy = None
@@ -58,8 +58,9 @@ class Model(object):
         pass
 
     def save_checkpoint(self, checkpoint_path, step):
-        saver = tf.train.Saver()
-        return saver.save(self.sess, checkpoint_path, global_step=step)
+        with tf.device('CPU:0'):
+            saver = tf.train.Saver()
+            return saver.save(self.sess, checkpoint_path, global_step=step)
 
     def _initialize(self, real_ouput, predictions):
         self.global_step = self._get_or_create_global_step(graph=self.graph)
@@ -71,11 +72,12 @@ class Model(object):
         pass
 
     def _add_summary_scalar(self):
-        tf.summary.scalar('accuracy', self.accuracy)
-        tf.summary.scalar('loss', self.loss)
+        with tf.device('CPU:0'):
+            tf.summary.scalar('accuracy', self.accuracy)
+            tf.summary.scalar('loss', self.loss)
 
     def _restore_from_checkpoint(self):
-        with self.graph.as_default():
+        with self.graph.as_default(), tf.device('CPU:0'):
             saver = tf.train.Saver()
             if self._checkpoint is not None:
                 saver.restore(self.sess, self._checkpoint)
@@ -102,7 +104,7 @@ class Model(object):
         return tf.reshape(predictions, [-1])
 
     def _build_summary(self):
-        with self.graph.as_default():
+        with self.graph.as_default(), tf.device('CPU:0'):
             return tf.summary.merge_all()
 
     def _get_or_create_global_step(self, graph=None):
@@ -120,13 +122,15 @@ class Model(object):
         graph = graph or tf.get_default_graph()
         collection = graph.get_collection(tf.GraphKeys.GLOBAL_STEP)
         for global_step in collection:
+            self.logger.info('Found global_step={}'.format(global_step))
             return global_step
         return None
 
     def _get_tensor(self, config):
-        return data.inputs(
-            [config.train_file],
-            config.batch_size,
-            True,
-            1,
-            config.seed)
+        with tf.device('CPU:0'):
+            return data.inputs(
+                [config.train_file],
+                config.batch_size,
+                True,
+                1,
+                config.seed)

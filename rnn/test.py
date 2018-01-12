@@ -7,7 +7,8 @@ class Test(Model):
 
     def __init__(self, config):
 
-        self._max = 0
+        self.total_accuracy = 0
+        self.count_accuracy = 0
 
         with tf.Graph().as_default(), tf.device(config.test_device):
             super().__init__(config.checkpoint_dir)
@@ -21,4 +22,6 @@ class Test(Model):
             self.tvars,
             self.summary_op,
             self.global_step])
+        self.total_accuracy += res[0]
+        self.count_accuracy += 1
         return res

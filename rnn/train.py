@@ -20,4 +20,6 @@ class Train(Model):
             self.optimizer,
             self.summary_op,
             self.global_step])
+        self.logger.info('Train loss={}, accuracy={}'.format(res[0], res[1]))
+        self.logger.info('Train global_step={}'.format(res[-1]))
         return res

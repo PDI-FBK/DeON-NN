@@ -13,14 +13,19 @@ class Main(object):
         self.logger = config.logger
 
     def run(self, force):
-        self.logger.info('Training')
+        self.logger.info('Start')
         for step in self.train_model.next():
             if step % self.training_steps == 0:
+                self.logger.info('Saving checkpoint into {}'.format(self.model_checkpoint))
                 self.train_model.save_checkpoint(self.model_checkpoint, step)
                 self._run_all_test_model()
 
     def _run_all_test_model(self):
-        self.logger.info('Testing')
+        self.logger.info('Run tests')
         test_model = Test(self.config)
         for step in test_model.next():
             pass
+        if test_model.count_accuracy > 0:
+            self.logger.info('Test mean_accuracy={}'
+                .format(test_model.total_accuracy / test_model.count_accuracy))
+

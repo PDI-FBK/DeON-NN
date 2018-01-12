@@ -10,7 +10,8 @@ class Config():
         self.num_layers = config['num_layers']
         self.hidden_size = config['hidden_size']
 
-        self.summaries = os.path.join(basedir, config['summaries'])
+        self.summaries = os.path.join(
+            basedir, config['summaries'] + '/' + config['name'])
 
         self.training_steps = config['training_steps']
 
