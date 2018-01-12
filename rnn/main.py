@@ -19,6 +19,7 @@ class Main(object):
                 self.logger.info('Saving checkpoint into {}'.format(self.model_checkpoint))
                 self.train_model.save_checkpoint(self.model_checkpoint, step)
                 self._run_all_test_model()
+        self._run_all_test_model()
 
     def _run_all_test_model(self):
         self.logger.info('Run tests')
