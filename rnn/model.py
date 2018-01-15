@@ -16,14 +16,16 @@ class Model(object):
         self.tvars = None
         self.summary_op = None
         self.summary_path = None
+        self.epochs = 1
         self.logger = logging
         self._checkpoint = tf.train.latest_checkpoint(checkpoint_dir)
+        self.MODE = 'TRAIN'
 
     def next(self):
         with self.sess as sess:
-            summary_writer = tf.summary.FileWriter(
+            self.summary_writer = tf.summary.FileWriter(
                 self.summary_path, sess.graph)
-            summary_writer.flush()
+            self.summary_writer.flush()
             sess.run(tf.global_variables_initializer())
             sess.run(tf.local_variables_initializer())
 
@@ -34,12 +36,13 @@ class Model(object):
             try:
                 while flag:
                     res = self.step()
-                    summary_writer.add_summary(res[-2])
+                    self.summary_writer.add_summary(res[0])
                     yield res[-1]
             except tf.errors.OutOfRangeError as oore:
+                self.logger.info('Model:next:except {}'.format(oore))
                 coord.request_stop(ex=oore)
             finally:
-                summary_writer.flush()
+                self.summary_writer.flush()
                 flag = False
                 coord.request_stop()
                 coord.join(threads)
@@ -47,8 +50,8 @@ class Model(object):
     def step(self):
         raise NotImplementedError
 
-    def build(self, config):
-        tensor = self._get_tensor(config)
+    def build(self, config, file):
+        tensor = self._get_tensor(file, config.batch_size, config.seed)
         x = tensor['words']
         y = tensor['definition']
         real_ouput = tf.cast(tf.reshape(y, [-1]), tf.float32)
@@ -66,17 +69,19 @@ class Model(object):
             return saver.save(self.sess, checkpoint_path, global_step=step)
 
     def _initialize(self, real_ouput, predictions):
-        self.global_step = self._get_or_create_global_step(graph=self.graph)
-        self.loss = self._init_loss(real_ouput, predictions)
         self.accuracy = self._init_accuracy(real_ouput, predictions)
-        self.optimizer = self._init_optimizer(self.loss, self.global_step)
-        self.tvars = tf.trainable_variables()
+        if self.MODE == 'TRAIN':
+            self.global_step = self._get_or_create_global_step(graph=self.graph)
+            self.loss = self._init_loss(real_ouput, predictions)
+            self.optimizer = self._init_optimizer(self.loss, self.global_step)
+            self.tvars = tf.trainable_variables()
         pass
 
     def _add_summary_scalar(self):
         with tf.device('CPU:0'):
             tf.summary.scalar('accuracy', self.accuracy)
-            tf.summary.scalar('loss', self.loss)
+            if self.MODE == 'TRAIN':
+                tf.summary.scalar('loss', self.loss)
 
     def _restore_from_checkpoint(self):
         with self.graph.as_default(), tf.device('CPU:0'):
@@ -128,11 +133,11 @@ class Model(object):
             return global_step
         return None
 
-    def _get_tensor(self, config):
+    def _get_tensor(self, file, batch_size, seed):
         with tf.device('CPU:0'):
             return data.inputs(
-                [config.train_file],
-                config.batch_size,
+                [file],
+                batch_size,
                 True,
-                config.epochs,
-                config.seed)
+                self.epochs,
+                seed)

@@ -3,7 +3,7 @@ import os
 import tensorflow as tf
 
 
-class Test(Model):
+class Validation(Model):
 
     def __init__(self, config):
 
@@ -12,10 +12,10 @@ class Test(Model):
 
         with tf.Graph().as_default(), tf.device(config.test_device):
             super().__init__(config.checkpoint_dir)
-            self.MODE = 'TEST'
-            self.summary_path = os.path.join(config.summaries, "test")
+            self.MODE = 'VALIDATION'
+            self.summary_path = os.path.join(config.summaries, "validation")
             self.logger = config.logger
-            self.build(config, config.test_file)
+            self.build(config, config.eval_file)
 
     def step(self):
         res = self.sess.run([

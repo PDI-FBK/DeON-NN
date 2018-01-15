@@ -12,13 +12,13 @@ class Logits():
         self.cell_type = config.cell_type
 
     def build(self, tensor_input, tensor_length):
-        with tf.device('CPU:0'):
-            embeddings = self._get_embeddings(
-                self.vocab_input_size, self.emb_dim)
-            softmax_w = self._get_softmax_w(
-                self.hidden_size, self.vocab_ouput_size)
-            softmax_b = self._get_softmax_b(self.vocab_ouput_size)
-            embedding_layer = tf.nn.embedding_lookup(embeddings, tensor_input)
+        # with tf.device('CPU:0'):
+        embeddings = self._get_embeddings(
+            self.vocab_input_size, self.emb_dim)
+        softmax_w = self._get_softmax_w(
+            self.hidden_size, self.vocab_ouput_size)
+        softmax_b = self._get_softmax_b(self.vocab_ouput_size)
+        embedding_layer = tf.nn.embedding_lookup(embeddings, tensor_input)
 
         output = self._get_output(embedding_layer, tensor_length)
 
@@ -49,6 +49,8 @@ class Logits():
     def _build_inner_cell(self, hidden_size, celltype):
         if celltype == "BasicLSTMCell":
             return tf.contrib.rnn.BasicLSTMCell(hidden_size, forget_bias=0.0, state_is_tuple=True)
+        if celltype == "GRUCell":
+            return tf.contrib.rnn.GRUCell(hidden_size)
         raise Exception(celltype, "not implemented.")
 
     def _multi_rnn_cell(self, hidden_size, num_layers, celltype):

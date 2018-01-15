@@ -1,5 +1,7 @@
 from rnn.train import Train
 from rnn.test import Test
+from rnn.validation import Validation
+from datetime import datetime
 
 
 class Main(object):
@@ -15,18 +17,40 @@ class Main(object):
     def run(self, force):
         self.logger.info('Start')
         for step in self.train_model.next():
+
+            if step == 1 or step % 50 == 0:
+                self.train_model.flush()
+                self.train_model.save_checkpoint(self.model_checkpoint, step)
+
             if step % self.validate_every_steps == 0:
                 self.logger.info('Saving checkpoint into {}'.format(self.model_checkpoint))
                 self.train_model.save_checkpoint(self.model_checkpoint, step)
-                self._run_all_test_model()
-        self._run_all_test_model()
+                self._run_test_model()
+                self._run_validation_model()
+        self._run_test_model()
+        self._run_validation_model()
 
-    def _run_all_test_model(self):
+    def _run_test_model(self):
         self.logger.info('Run tests')
-        test_model = Test(self.config)
-        for step in test_model.next():
-            pass
-        if test_model.count_accuracy > 0:
-            self.logger.info('Test mean_accuracy={}'
-                .format(test_model.mean_accuracy))
+        model = Test(self.config)
+        self._run_model(model, 'test')
 
+    def _run_validation_model(self):
+        self.logger.info('Run validation')
+        model = Validation(self.config)
+        self._run_model(model, 'validation')
+
+    def _run_model(self, model, mode):
+        start = datetime.now()
+        for i, step in enumerate(model.next()):
+            delta = datetime.now() - start
+            combined = delta.seconds + delta.microseconds / 1E6
+            self.logger.info('Single {} took: {} sec'.format(mode, combined))
+            start = datetime.now()
+
+            if i % 50 == 0:
+                self.logger.info('After {} {}s accurasy={}'.format(i, mode, model.mean_accuracy()))
+
+        if model.count_accuracy > 0:
+            self.logger.info('{} mean_accuracy={}'
+                .format(mode, model.mean_accuracy()))
