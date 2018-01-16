@@ -28,16 +28,14 @@ class Model(object):
             self.summary_writer.flush()
             sess.run(tf.global_variables_initializer())
             sess.run(tf.local_variables_initializer())
-
+            self._restore_from_checkpoint()
             coord = tf.train.Coordinator()
             threads = tf.train.start_queue_runners(coord=coord)
             flag = True
 
             try:
                 while flag:
-                    res = self.step()
-                    self.summary_writer.add_summary(res[0])
-                    yield res[-1]
+                    yield self.step()
             except tf.errors.OutOfRangeError as oore:
                 self.logger.info('Model:next:except {}'.format(oore))
                 coord.request_stop(ex=oore)
@@ -46,8 +44,13 @@ class Model(object):
                 flag = False
                 coord.request_stop()
                 coord.join(threads)
+                if self.MODE is not 'TRAIN':
+                    self.summarize()
 
     def step(self):
+        raise NotImplementedError
+
+    def summarize(self):
         raise NotImplementedError
 
     def build(self, config, file):
@@ -60,7 +63,6 @@ class Model(object):
         self._initialize(real_ouput, predictions)
         self._add_summary_scalar()
         self.summary_op = self._build_summary()
-        self._restore_from_checkpoint()
         pass
 
     def save_checkpoint(self, checkpoint_path, step):
@@ -70,8 +72,9 @@ class Model(object):
 
     def _initialize(self, real_ouput, predictions):
         self.accuracy = self._init_accuracy(real_ouput, predictions)
+        self.global_step = self._get_or_create_global_step(graph=self.graph)
+        self.logger.info('model:_initialize \t global_step={}'.format(self.global_step))
         if self.MODE == 'TRAIN':
-            self.global_step = self._get_or_create_global_step(graph=self.graph)
             self.loss = self._init_loss(real_ouput, predictions)
             self.optimizer = self._init_optimizer(self.loss, self.global_step)
             self.tvars = tf.trainable_variables()
@@ -141,3 +144,11 @@ class Model(object):
                 True,
                 self.epochs,
                 seed)
+
+    def as_summary(self, kvp):
+        """Turns a dictionary into a `TensorFlow` summary."""
+        return tf.summary.Summary(
+            value=[
+                tf.summary.Summary.Value(tag=key, simple_value=value)
+                for key, value in kvp.items()
+            ])
