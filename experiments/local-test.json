@@ -1,0 +1,30 @@
+{
+    "name": "simple-test",
+    "emb_dim": 256,
+    "hidden_size": 512,
+    "epochs": 100,
+    "validate_every_steps": 10,
+    "num_layers": 1,
+    "vocab_input_size": 589598,
+    "vocab_ouput_size": 1,
+    "seed": 23,
+    "cell_type": "GRUCell",
+    "saver_result_path": "../deonrnn-dataset/simple-test",
+    "summaries": "summaries",
+    "checkpoint": "checkpoint",
+    "train": {
+        "file": "../deonrnn-dataset/simple-test/train.tsv.rio",
+        "device": "CPU:0",
+        "batch_size": 20
+    },
+    "test": {
+        "file": "../deonrnn-dataset/simple-test/test.tsv.rio",
+        "device": "CPU:0",
+        "batch_size": 20
+    },
+    "validation": {
+        "file": "../deonrnn-dataset/simple-test/validation.tsv.rio",
+        "device": "CPU:0",
+        "batch_size": 20
+    }
+}

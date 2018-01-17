@@ -11,12 +11,12 @@ class Test(Model):
         self.count_accuracy = 0
         self._step = 0
 
-        with tf.Graph().as_default(), tf.device(config.test_device):
+        with tf.Graph().as_default(), tf.device(config.test.device):
             super().__init__(config.checkpoint_dir)
             self.MODE = 'TEST'
             self.summary_path = os.path.join(config.summaries, "test")
             self.logger = config.logger
-            self.build(config, config.test_file)
+            self.build(config, config.test.inputfile, config.test.batch_size)
 
     def step(self):
         res = self.sess.run([

@@ -1,0 +1,30 @@
+{
+    "name": "balanced-all-dataset-v2",
+    "emb_dim": 256,
+    "hidden_size": 512,
+    "epochs": 100,
+    "validate_every_steps": 200,
+    "num_layers": 1,
+    "vocab_input_size": 589596,
+    "vocab_ouput_size": 1,
+    "seed": 23,
+    "cell_type": "GRUCell",
+    "saver_result_path": "../../../../../kingman1/data/ejaupaj/deonrnn/",
+    "summaries": "summaries",
+    "checkpoint": "checkpoint",
+    "train": {
+        "file": "../../../../../kingman1/data/ejaupaj/deonrnn/dataset/balanced-all-dataset-v1/train.tsv.rio",
+        "device": "GPU:0",
+        "batch_size": 100
+    },
+    "test": {
+        "file": "../../../../../kingman1/data/ejaupaj/deonrnn/dataset/balanced-all-dataset-v1/test.tsv.rio",
+        "device": "CPU:0",
+        "batch_size": 100
+    },
+    "validation": {
+        "file": "../../../../../kingman1/data/ejaupaj/deonrnn/dataset/balanced-all-dataset-v1/validation.tsv.rio",
+        "device": "CPU:0",
+        "batch_size": 100
+    }
+}

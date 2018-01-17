@@ -53,8 +53,8 @@ class Model(object):
     def summarize(self):
         raise NotImplementedError
 
-    def build(self, config, file):
-        tensor = self._get_tensor(file, config.batch_size, config.seed)
+    def build(self, config, file, batch_size):
+        tensor = self._get_tensor(file, batch_size, config.seed)
         x = tensor['words']
         y = tensor['definition']
         real_ouput = tf.cast(tf.reshape(y, [-1]), tf.float32)

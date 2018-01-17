@@ -11,12 +11,12 @@ class Validation(Model):
         self.count_accuracy = 0
         self._step = 0
 
-        with tf.Graph().as_default(), tf.device(config.test_device):
+        with tf.Graph().as_default(), tf.device(config.validation.device):
             super().__init__(config.checkpoint_dir)
             self.MODE = 'VALIDATION'
             self.summary_path = os.path.join(config.summaries, "validation")
             self.logger = config.logger
-            self.build(config, config.eval_file)
+            self.build(config, config.validation.inputfile, config.validation.batch_size)
 
     def step(self):
         res = self.sess.run([

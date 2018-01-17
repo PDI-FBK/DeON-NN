@@ -6,14 +6,14 @@ import tensorflow as tf
 class Train(Model):
 
     def __init__(self, config):
-        with tf.Graph().as_default(), tf.device(config.train_device):
+        with tf.Graph().as_default(), tf.device(config.train.device):
             super().__init__(config.checkpoint_dir)
             self.MODE = 'TRAIN'
             self.summary_path = os.path.join(config.summaries, 'train')
             self.logger = config.logger
             self.epochs = config.epochs
             self._step = 0
-            self.build(config, config.train_file)
+            self.build(config, config.train.inputfile, config.train.batch_size)
 
     def step(self):
         res = self.sess.run([
