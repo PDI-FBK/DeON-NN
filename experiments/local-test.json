@@ -9,7 +9,7 @@
     "vocab_ouput_size": 1,
     "seed": 23,
     "cell_type": "GRUCell",
-    "saver_result_path": "../deonrnn-dataset/simple-test",
+    "saver_result_path": "../deonrnn-dataset/simple-",
     "summaries": "summaries",
     "checkpoint": "checkpoint",
     "train": {

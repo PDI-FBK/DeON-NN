@@ -25,7 +25,9 @@ class Config():
             os.makedirs(os.path.join(config['saver_result_path'], config['name']))
 
         self.logger = self._logging_setup(
-            os.path.join(config['saver_result_path'], config['name'] + '.log'))
+            os.path.join(
+                basedir,
+                config['saver_result_path'] + '/' + config['name'] + '/' + config['name'] + '.log'))
         self.summaries = os.path.join(
             basedir,
             config['saver_result_path'] + '/' + config['name'] + '/' + config['summaries'])
