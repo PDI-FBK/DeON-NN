@@ -13,17 +13,17 @@
     "summaries": "summaries",
     "checkpoint": "checkpoint",
     "train": {
-        "file": "../../../../../kingman1/data/ejaupaj/deonrnn/dataset/balanced-all-dataset-v1/train.tsv.rio",
+        "file": "../../../../../kingman1/data/ejaupaj/deonrnn/dataset/balanced-all/train.tsv.rio",
         "device": "GPU:0",
         "batch_size": 100
     },
     "test": {
-        "file": "../../../../../kingman1/data/ejaupaj/deonrnn/dataset/balanced-all-dataset-v1/test.tsv.rio",
+        "file": "../../../../../kingman1/data/ejaupaj/deonrnn/dataset/balanced-all/test.tsv.rio",
         "device": "CPU:0",
         "batch_size": 500
     },
     "validation": {
-        "file": "../../../../../kingman1/data/ejaupaj/deonrnn/dataset/balanced-all-dataset-v1/validation.tsv.rio",
+        "file": "../../../../../kingman1/data/ejaupaj/deonrnn/dataset/balanced-all/validation.tsv.rio",
         "device": "CPU:0",
         "batch_size": 500
     }

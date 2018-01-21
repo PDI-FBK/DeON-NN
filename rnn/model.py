@@ -20,6 +20,7 @@ class Model(object):
         self.logger = logging
         self._checkpoint = tf.train.latest_checkpoint(checkpoint_dir)
         self.MODE = 'TRAIN'
+        self.saver = tf.train.Saver()
 
     def next(self):
         with self.sess as sess:
@@ -67,8 +68,7 @@ class Model(object):
 
     def save_checkpoint(self, checkpoint_path, step):
         with tf.device('CPU:0'):
-            saver = tf.train.Saver()
-            return saver.save(self.sess, checkpoint_path, global_step=step)
+            return self.saver.save(self.sess, checkpoint_path, global_step=step)
 
     def _initialize(self, real_ouput, predictions):
         self.accuracy = self._init_accuracy(real_ouput, predictions)

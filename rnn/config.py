@@ -21,19 +21,17 @@ class Config():
 
         if not os.path.exists(config['saver_result_path']):
             raise Exception(config['saver_result_path'] + 'does not exist! Please use a valid path.')
-        if not os.path.exists(config['saver_result_path']):
-            os.makedirs(os.path.join(config['saver_result_path'], config['name']))
+
+        folder = os.path.join(
+                basedir,
+                config['saver_result_path'] + '/' + config['name'])
+        if not os.path.exists(folder):
+            os.makedirs(folder)
 
         self.logger = self._logging_setup(
-            os.path.join(
-                basedir,
-                config['saver_result_path'] + '/' + config['name'] + '/' + config['name'] + '.log'))
-        self.summaries = os.path.join(
-            basedir,
-            config['saver_result_path'] + '/' + config['name'] + '/' + config['summaries'])
-        self.checkpoint_dir = os.path.join(
-            basedir,
-            config['saver_result_path'] + '/' + config['name'] + '/' + config['checkpoint'])
+            os.path.join(folder, config['name'] + '.log'))
+        self.summaries = os.path.join(folder, config['summaries'])
+        self.checkpoint_dir = os.path.join(folder, config['checkpoint'])
         self.model_checkpoint = os.path.join(self.checkpoint_dir, 'MODEL')
 
         self.train = Config.Train(config["train"], basedir)
