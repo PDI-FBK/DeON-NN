@@ -9,7 +9,7 @@ class Logits():
         self.vocab_ouput_size = config.vocab_ouput_size
         self.hidden_size = config.hidden_size
         self.num_layers = config.num_layers
-        self.cell_type = config.cell_type
+        self.cell = config.cell
 
     def build(self, tensor_input, tensor_length):
         # with tf.device('CPU:0'):
@@ -36,8 +36,7 @@ class Logits():
         return tf.get_variable('softmax_b', [output_size], dtype=tf.float32)
 
     def _get_output(self, embedding_layer, tensor_length):
-        cell = self._multi_rnn_cell(
-            self.hidden_size, self.num_layers, self.cell_type)
+        cell = self._multi_rnn_cell(self.num_layers)
 
         output, state = tf.nn.dynamic_rnn(
             cell,
@@ -46,15 +45,8 @@ class Logits():
             initial_state=cell.zero_state(tf.shape(embedding_layer)[0], tf.float32))
         return self._extract_axis(output, tensor_length - 1)
 
-    def _build_inner_cell(self, hidden_size, celltype):
-        if celltype == "BasicLSTMCell":
-            return tf.contrib.rnn.BasicLSTMCell(hidden_size, forget_bias=0.0, state_is_tuple=True)
-        if celltype == "GRUCell":
-            return tf.contrib.rnn.GRUCell(hidden_size)
-        raise Exception(celltype, "not implemented.")
-
-    def _multi_rnn_cell(self, hidden_size, num_layers, celltype):
-        cells = [self._build_inner_cell(hidden_size, celltype) for _ in range(0, num_layers)]
+    def _multi_rnn_cell(self, num_layers):
+        cells = [self.cell.create() for _ in range(0, num_layers)]
         return tf.contrib.rnn.MultiRNNCell(cells=cells, state_is_tuple=True)
 
     def _extract_axis(self, data, ind):

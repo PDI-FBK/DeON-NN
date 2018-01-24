@@ -1,5 +1,6 @@
 import os
 import logging
+import tensorflow as tf
 
 
 class Config():
@@ -16,8 +17,8 @@ class Config():
         self.vocab_ouput_size = config['vocab_ouput_size']
 
         self.seed = config['seed']
-        self.cell_type = config['cell_type']
-
+        self.cell = Config.Cell(config['cell'], config['hidden_size'])
+        self.optimizer = Config.Optimizer(config['optimizer']).optimizer
 
         if not os.path.exists(config['saver_result_path']):
             raise Exception(config['saver_result_path'] + 'does not exist! Please use a valid path.')
@@ -67,3 +68,24 @@ class Config():
             self.inputfile = os.path.join(basedir, params['file'])
             self.device = params["device"]
             self.batch_size = params["batch_size"]
+
+    class Optimizer():
+
+        def __init__(self, data):
+            name = data['class']
+            params = data['params']
+            self.optimizer = tf.train.__dict__[name](**params)
+
+    class Cell():
+
+        def __init__(self, data, hidden_size):
+            self.name = data['class']
+            self.params = data['params']
+            self.params['num_units'] = hidden_size
+
+        def create(self):
+            unresolve = 'could not resolve type `{}`'
+            try:
+                return tf.contrib.rnn.__dict__[self.name](**self.params)
+            except:
+                raise RuntimeError(unresolve.format(self.name))

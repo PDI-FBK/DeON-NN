@@ -4,13 +4,15 @@
     "hidden_size": 512,
     "epochs": 10,
     "validate_every_steps": 200,
-    "num_layers": 2,
+    "num_layers": 1,
     "vocab_input_size": 633661,
     "vocab_ouput_size": 1,
     "seed": 23,
     "cell": {
-        "class": "GRUCell",
-        "params": {}
+        "class": "BasicLSTMCell",
+        "params": {
+            "forget_bias": 0.0
+        }
     },
     "optimizer":{
         "class": "AdamOptimizer",
