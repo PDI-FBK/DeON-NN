@@ -1,10 +1,10 @@
 {
-    "name": "0001",
+    "name": "0003",
     "emb_dim": 256,
     "hidden_size": 512,
     "epochs": 10,
     "validate_every_steps": 200,
-    "num_layers": 1,
+    "num_layers": 2,
     "vocab_input_size": 633661,
     "vocab_ouput_size": 1,
     "seed": 23,
@@ -18,22 +18,22 @@
             "learning_rate": 0.001
         }
     },
-    "saver_result_path": "/mnt/experiments",
+    "saver_result_path": "../../../../../kingman1/data/ejaupaj/deonrnn/",
     "summaries": "summaries",
     "checkpoint": "checkpoint",
     "train": {
-        "file": "/mnt/dataset/balanced-all/train.tsv.rio",
+        "file": "../../../../../kingman1/data/ejaupaj/deonrnn/dataset/balanced-all/train.tsv.rio",
         "device": "GPU:0",
-        "batch_size": 800
+        "batch_size": 300
     },
     "test": {
-        "file": "/mnt/dataset/balanced-all/test.tsv.rio",
+        "file": "../../../../../kingman1/data/ejaupaj/deonrnn/dataset/balanced-all/test.tsv.rio",
         "device": "CPU:0",
-        "batch_size": 1000
+        "batch_size": 500
     },
     "validation": {
-        "file": "/mnt/dataset/balanced-all/validation.tsv.rio",
+        "file": "../../../../../kingman1/data/ejaupaj/deonrnn/dataset/balanced-all/validation.tsv.rio",
         "device": "CPU:0",
-        "batch_size": 1000
+        "batch_size": 500
     }
 }
