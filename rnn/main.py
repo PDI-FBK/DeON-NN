@@ -26,6 +26,7 @@ class Main(object):
                 self.train_model.save_checkpoint(self.model_checkpoint, step)
                 self._run_test_model()
                 self._run_validation_model()
+        self.logger.info('Finished all epochs. Last test and validation.')
         self._run_test_model()
         self._run_validation_model()
 

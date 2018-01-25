@@ -7,7 +7,7 @@ import rnn.data as data
 class Model(object):
     """this model construct the graph of the rnn"""
     def __init__(self, checkpoint_dir):
-        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.5)
+        gpu_options = tf.GPUOptions()
         self.sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, allow_soft_placement=True))
         self.graph = tf.get_default_graph()
         self.loss = None
