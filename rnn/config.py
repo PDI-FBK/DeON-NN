@@ -57,6 +57,7 @@ class Config():
             self.batch_size = params["batch_size"]
             self.steps = params['epochs'] * Config.one_epoch_steps(
                 params['file.tsv'], self.batch_size)
+            self.keep_prob = params['keep_prob']
 
     class Test():
 
@@ -66,6 +67,7 @@ class Config():
             self.batch_size = params["batch_size"]
             self.steps = Config.one_epoch_steps(
                 params['file.tsv'], self.batch_size)
+            self.keep_prob = 1
 
     class Validation():
 
@@ -75,6 +77,7 @@ class Config():
             self.batch_size = params["batch_size"]
             self.steps = Config.one_epoch_steps(
                 params['file.tsv'], self.batch_size)
+            self.keep_prob = 1
 
     class Optimizer():
 

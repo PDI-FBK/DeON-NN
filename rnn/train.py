@@ -13,6 +13,7 @@ class Train(Model):
             self.logger = config.logger
             self._step = 0
             self.max_steps = config.train.steps
+            self.keep_prob_vl = config.train.keep_prob
             self.build(config, config.train.inputfile, config.train.batch_size)
 
     def step(self):
@@ -22,7 +23,7 @@ class Train(Model):
             self.accuracy,
             self.tvars,
             self.optimizer,
-            self.global_step], feed_dict={self.keep_prob: 0.8})
+            self.global_step], feed_dict={self.keep_prob: self.keep_prob_vl})
         self._step = res[-1]
         self.logger.info('Train loss={}, accuracy={}'.format(res[1], res[2]))
         self.logger.info('Train global_step={}'.format(res[-1]))

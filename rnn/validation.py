@@ -17,13 +17,14 @@ class Validation(Model):
             self.MODE = 'VALIDATION'
             self.summary_path = os.path.join(config.summaries, "validation")
             self.logger = config.logger
+            self.keep_prob_vl = config.validation.keep_prob
             self.build(config, config.validation.inputfile, config.validation.batch_size)
 
     def step(self):
         res = self.sess.run([
             self.summary_op,
             self.accuracy,
-            self.global_step])
+            self.global_step], feed_dict={self.keep_prob: self.keep_prob_vl})
         self._step = res[2]
         self.total_accuracy += res[1]
         self.count_accuracy += 1

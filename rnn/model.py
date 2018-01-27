@@ -58,7 +58,7 @@ class Model(object):
         y = tensor['definition']
         self.keep_prob = tf.placeholder(tf.float32)
         real_ouput = tf.cast(tf.reshape(y, [-1]), tf.float32)
-        logits = Logits(config).build(x, tensor['sentence_length'])
+        logits = Logits(config).build(x, tensor['sentence_length'], self.keep_prob)
         predictions = self._init_prediction(logits)
         self._initialize(real_ouput, predictions, config.optimizer)
         self._add_summary_scalar()
