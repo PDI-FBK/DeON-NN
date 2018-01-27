@@ -11,8 +11,8 @@ class Train(Model):
             self.MODE = 'TRAIN'
             self.summary_path = os.path.join(config.summaries, 'train')
             self.logger = config.logger
-            self.epochs = config.epochs
             self._step = 0
+            self.max_steps = config.train.steps
             self.build(config, config.train.inputfile, config.train.batch_size)
 
     def step(self):

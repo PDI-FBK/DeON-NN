@@ -11,7 +11,6 @@ class Config():
         self.hidden_size = config['hidden_size']
 
         self.validate_every_steps = config['validate_every_steps']
-        self.epochs = config['epochs']
 
         self.vocab_input_size = config['vocab_input_size']
         self.vocab_ouput_size = config['vocab_ouput_size']
@@ -21,7 +20,9 @@ class Config():
         self.optimizer = Config.Optimizer(config['optimizer']).optimizer
 
         if not os.path.exists(config['saver_result_path']):
-            raise Exception(config['saver_result_path'] + 'does not exist! Please use a valid path.')
+            raise Exception(
+                config['saver_result_path'] +
+                'does not exist! Please use a valid path.')
 
         folder = os.path.join(
                 basedir,
@@ -51,23 +52,29 @@ class Config():
     class Train():
 
         def __init__(self, params, basedir):
-            self.inputfile = os.path.join(basedir, params['file'])
+            self.inputfile = os.path.join(basedir, params['file.rio'])
             self.device = params["device"]
             self.batch_size = params["batch_size"]
+            self.steps = params['epochs'] * Config.one_epoch_steps(
+                params['file.tsv'], self.batch_size)
 
     class Test():
 
         def __init__(self, params, basedir):
-            self.inputfile = os.path.join(basedir, params['file'])
+            self.inputfile = os.path.join(basedir, params['file.rio'])
             self.device = params["device"]
             self.batch_size = params["batch_size"]
+            self.steps = Config.one_epoch_steps(
+                params['file.tsv'], self.batch_size)
 
     class Validation():
 
         def __init__(self, params, basedir):
-            self.inputfile = os.path.join(basedir, params['file'])
+            self.inputfile = os.path.join(basedir, params['file.rio'])
             self.device = params["device"]
             self.batch_size = params["batch_size"]
+            self.steps = Config.one_epoch_steps(
+                params['file.tsv'], self.batch_size)
 
     class Optimizer():
 
@@ -89,3 +96,10 @@ class Config():
                 return tf.contrib.rnn.__dict__[self.name](**self.params)
             except:
                 raise RuntimeError(unresolve.format(self.name))
+
+    def one_epoch_steps(tsv_file, batch_size):
+        f_len = 0
+        with open(tsv_file, 'r') as f:
+            for _ in f:
+                f_len += 1
+        return f_len // batch_size

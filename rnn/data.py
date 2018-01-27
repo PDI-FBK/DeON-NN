@@ -38,7 +38,7 @@ def read_from_files(file_patterns, shuffle=True, num_epochs=None, seed=None):
 
 def inputs(file_patterns, batch_size, shuffle=True, num_epochs=None, seed=None):
     """Build the input pipeline."""
-    min_after_dequeue = 100
+    min_after_dequeue = 2000
     num_threads = 4
     safety_margin = 2
     capacity = (min_after_dequeue + (num_threads + safety_margin) * batch_size)

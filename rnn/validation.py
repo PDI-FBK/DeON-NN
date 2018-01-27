@@ -10,6 +10,7 @@ class Validation(Model):
         self.total_accuracy = 0
         self.count_accuracy = 0
         self._step = 0
+        self.max_steps = config.validation.steps
 
         with tf.Graph().as_default(), tf.device(config.validation.device):
             super().__init__(config.checkpoint_dir)

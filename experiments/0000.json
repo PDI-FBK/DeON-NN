@@ -2,7 +2,6 @@
     "name": "0000",
     "emb_dim": 256,
     "hidden_size": 512,
-    "epochs": 10,
     "validate_every_steps": 200,
     "num_layers": 1,
     "vocab_input_size": 633661,
@@ -22,17 +21,21 @@
     "summaries": "summaries",
     "checkpoint": "checkpoint",
     "train": {
-        "file": "/mnt/dataset/balanced-all/train.tsv.rio",
+        "file.rio": "/mnt/dataset/balanced-all/train.tsv.rio",
+        "file.tsv": "/mnt/dataset/balanced-all/train.tsv",
         "device": "GPU:0",
-        "batch_size": 800
+        "batch_size": 800,
+        "epochs": 10
     },
     "test": {
-        "file": "/mnt/dataset/balanced-all/test.tsv.rio",
+        "file.rio": "/mnt/dataset/balanced-all/test.tsv.rio",
+        "file.tsv": "/mnt/dataset/balanced-all/test.tsv",
         "device": "CPU:0",
         "batch_size": 1000
     },
     "validation": {
-        "file": "/mnt/dataset/balanced-all/validation.tsv.rio",
+        "file.rio": "/mnt/dataset/balanced-all/validation.tsv.rio",
+        "file.tsv": "/mnt/dataset/balanced-all/validation.tsv",
         "device": "CPU:0",
         "batch_size": 1000
     }

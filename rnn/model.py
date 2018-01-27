@@ -16,7 +16,6 @@ class Model(object):
         self.tvars = None
         self.summary_op = None
         self.summary_path = None
-        self.epochs = 1
         self.logger = logging
         self._checkpoint = tf.train.latest_checkpoint(checkpoint_dir)
         self.MODE = 'TRAIN'
@@ -139,7 +138,7 @@ class Model(object):
                 [file],
                 batch_size,
                 True,
-                self.epochs,
+                None,
                 seed)
 
     def as_summary(self, kvp):
