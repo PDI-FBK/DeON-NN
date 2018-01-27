@@ -22,7 +22,7 @@ class Train(Model):
             self.accuracy,
             self.tvars,
             self.optimizer,
-            self.global_step])
+            self.global_step], feed_dict={self.keep_prob: 0.8})
         self._step = res[-1]
         self.logger.info('Train loss={}, accuracy={}'.format(res[1], res[2]))
         self.logger.info('Train global_step={}'.format(res[-1]))

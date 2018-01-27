@@ -11,7 +11,7 @@ class Logits():
         self.num_layers = config.num_layers
         self.cell = config.cell
 
-    def build(self, tensor_input, tensor_length):
+    def build(self, tensor_input, tensor_length, keep_prob):
         # with tf.device('CPU:0'):
         embeddings = self._get_embeddings(
             self.vocab_input_size, self.emb_dim)
@@ -22,7 +22,8 @@ class Logits():
 
         output = self._get_output(embedding_layer, tensor_length)
 
-        logits = tf.matmul(output, softmax_w) + softmax_b
+        dropout = tf.nn.dropout(output, keep_prob)
+        logits = tf.matmul(dropout, softmax_w) + softmax_b
         return logits
 
     def _get_embeddings(self, input_size, emb_dim):

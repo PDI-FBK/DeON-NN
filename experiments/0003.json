@@ -25,7 +25,8 @@
         "file.tsv": "/mnt/dataset/balanced-all/train.tsv",
         "device": "GPU:0",
         "batch_size": 500,
-        "epochs": 10
+        "epochs": 10,
+        "keep_prob": 1
     },
     "test": {
         "file.rio": "/mnt/dataset/balanced-all/test.tsv.rio",

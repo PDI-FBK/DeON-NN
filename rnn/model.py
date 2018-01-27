@@ -56,6 +56,7 @@ class Model(object):
         tensor = self._get_tensor(file, batch_size, config.seed)
         x = tensor['words']
         y = tensor['definition']
+        self.keep_prob = tf.placeholder(tf.float32)
         real_ouput = tf.cast(tf.reshape(y, [-1]), tf.float32)
         logits = Logits(config).build(x, tensor['sentence_length'])
         predictions = self._init_prediction(logits)
