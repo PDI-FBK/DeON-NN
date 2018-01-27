@@ -8,3 +8,5 @@ build
 .eggs
 deon.egg-info
 dist
+dataset
+*.log

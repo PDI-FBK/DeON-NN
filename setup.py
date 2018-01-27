@@ -10,7 +10,10 @@ setup(name='deon',
       author_email='',
       license='Apache License 2.0',
       packages=find_packages(exclude=["tests"]),
-      install_requires=[],
+      install_requires=[
+            'click==6.7',
+            'tensorflow-gpu==1.4.1'
+      ],
       dependency_links=[],
       zip_safe=False,
       test_suite='test')
