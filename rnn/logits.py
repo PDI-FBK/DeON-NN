@@ -2,7 +2,7 @@ import tensorflow as tf
 
 
 class Logits():
-    def __init__(self, config):
+    def __init__(self, config, keep_prob=1):
         self.vocab_input_size = config.vocab_input_size
         self.emb_dim = config.emb_dim
         self.hidden_size = config.hidden_size
@@ -10,9 +10,9 @@ class Logits():
         self.hidden_size = config.hidden_size
         self.num_layers = config.num_layers
         self.cell = config.cell
+        self.keep_prob = keep_prob
 
-    def build(self, tensor_input, tensor_length, keep_prob):
-        # with tf.device('CPU:0'):
+    def build(self, tensor_input, tensor_length):
         embeddings = self._get_embeddings(
             self.vocab_input_size, self.emb_dim)
         softmax_w = self._get_softmax_w(
@@ -21,9 +21,7 @@ class Logits():
         embedding_layer = tf.nn.embedding_lookup(embeddings, tensor_input)
 
         output = self._get_output(embedding_layer, tensor_length)
-
-        dropout = tf.nn.dropout(output, keep_prob)
-        logits = tf.matmul(dropout, softmax_w) + softmax_b
+        logits = tf.matmul(output, softmax_w) + softmax_b
         return logits
 
     def _get_embeddings(self, input_size, emb_dim):
@@ -47,7 +45,9 @@ class Logits():
         return self._extract_axis(output, tensor_length - 1)
 
     def _multi_rnn_cell(self, num_layers):
-        cells = [self.cell.create() for _ in range(0, num_layers)]
+        cells = [tf.contrib.rnn.DropoutWrapper(
+            self.cell.create(), input_keep_prob=self.keep_prob)
+            for _ in range(0, num_layers)]
         return tf.contrib.rnn.MultiRNNCell(cells=cells, state_is_tuple=True)
 
     def _extract_axis(self, data, ind):

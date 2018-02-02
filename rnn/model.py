@@ -52,13 +52,13 @@ class Model(object):
     def summarize(self):
         raise NotImplementedError
 
-    def build(self, config, file, batch_size):
+    def build(self, config, file, batch_size, keep_prob=1):
         tensor = self._get_tensor(file, batch_size, config.seed)
         x = tensor['words']
         y = tensor['definition']
         self.keep_prob = tf.placeholder(tf.float32)
         real_ouput = tf.cast(tf.reshape(y, [-1]), tf.float32)
-        logits = Logits(config).build(x, tensor['sentence_length'], self.keep_prob)
+        logits = Logits(config, keep_prob).build(x, tensor['sentence_length'])
         predictions = self._init_prediction(logits)
         self._initialize(real_ouput, predictions, config.optimizer)
         self._add_summary_scalar()
@@ -72,6 +72,8 @@ class Model(object):
 
     def _initialize(self, real_ouput, predictions, optimizer):
         self.accuracy = self._init_accuracy(real_ouput, predictions)
+        self.precision = tf.metrics.precision(real_ouput, predictions)
+        self.recall = tf.metrics.recall(real_ouput, predictions)
         self.global_step = self._get_or_create_global_step(graph=self.graph)
         self.logger.info('model:_initialize \t global_step={}'.format(self.global_step))
         if self.MODE == 'TRAIN':

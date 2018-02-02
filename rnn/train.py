@@ -1,6 +1,7 @@
 from rnn.model import Model
 import os
 import tensorflow as tf
+import rnn.common as common
 
 
 class Train(Model):
@@ -13,22 +14,33 @@ class Train(Model):
             self.logger = config.logger
             self._step = 0
             self.max_steps = config.train.steps
-            self.keep_prob_vl = config.train.keep_prob
-            self.build(config, config.train.inputfile, config.train.batch_size)
+            self.build(
+                config,
+                config.train.inputfile,
+                config.train.batch_size,
+                keep_prob=config.train.keep_prob)
 
     def step(self):
         res = self.sess.run([
             self.summary_op,
             self.loss,
             self.accuracy,
+            self.precision,
+            self.recall,
             self.tvars,
             self.optimizer,
-            self.global_step], feed_dict={self.keep_prob: self.keep_prob_vl})
+            self.global_step])
         self._step = res[-1]
         self.logger.info('Train loss={}, accuracy={}'.format(res[1], res[2]))
+        self.logger.info('Train precision={}, recall={}'.format(res[3], res[4]))
         self.logger.info('Train global_step={}'.format(res[-1]))
 
-        metric = {'accuracy': res[2], 'loss': res[1]}
+        metric = {
+            'accuracy': res[2],
+            'loss': res[1],
+            'precision': res[3][0],
+            'recall': res[4][0],
+            'f1': common.f1(res[3][0], res[4][0])}
         self.summarize(metric)
         return res
 
