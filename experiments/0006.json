@@ -1,17 +1,15 @@
 {
-    "name": "0004",
+    "name": "0006",
     "emb_dim": 256,
     "hidden_size": 512,
     "validate_every_steps": 200,
-    "num_layers": 2,
+    "num_layers": 1,
     "vocab_input_size": 633661,
     "vocab_ouput_size": 1,
     "seed": 23,
     "cell": {
-        "class": "BasicLSTMCell",
-        "params": {
-            "forget_bias": 0.0
-        }
+        "class": "LayerNormBasicLSTMCell",
+        "params": {}
     },
     "optimizer":{
         "class": "AdamOptimizer",
