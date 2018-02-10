@@ -30,7 +30,8 @@ class Test(Model):
             self.precision,
             self.recall,
             self.global_step], feed_dict={self.keep_prob: self.keep_prob_vl})
-        self._step = res[2]
+        self.logger.info('Test precision={}, recall={}'.format(res[2], res[3]))
+        self._step = res[-1]
         self.total_accuracy += res[1]
         self.total_precision += res[2][0]
         self.total_recall += res[3][0]
@@ -57,6 +58,8 @@ class Test(Model):
         _mean_precision = self.mean_precision()
         _mean_recall = self.mean_recall()
         self.logger.info('Test: step={} with mean_accuracy={}'.format(self._step, _mean_accuracy))
+        self.logger.info('Test: step={} with mean_precision={}'.format(self._step, _mean_precision))
+        self.logger.info('Test: step={} with mean_recall={}'.format(self._step, _mean_recall))
         metric = {
             'accuracy': _mean_accuracy,
             'precision': _mean_precision,

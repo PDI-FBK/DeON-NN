@@ -55,9 +55,9 @@ class Model(object):
     def build(self, config, file, batch_size, keep_prob=1):
         tensor = self._get_tensor(file, batch_size, config.seed)
         x = tensor['words']
-        y = tensor['definition']
+        self.y = tensor['definition']
         self.keep_prob = tf.placeholder(tf.float32)
-        real_ouput = tf.cast(tf.reshape(y, [-1]), tf.float32)
+        real_ouput = tf.cast(tf.reshape(self.y, [-1]), tf.float32)
         logits = Logits(config, keep_prob).build(x, tensor['sentence_length'])
         predictions = self._init_prediction(logits)
         self._initialize(real_ouput, predictions, config.optimizer)
@@ -71,9 +71,10 @@ class Model(object):
             return self.saver.save(self.sess, checkpoint_path, global_step=step)
 
     def _initialize(self, real_ouput, predictions, optimizer):
-        self.accuracy = self._init_accuracy(real_ouput, predictions)
-        self.precision = tf.metrics.precision(real_ouput, predictions)
-        self.recall = tf.metrics.recall(real_ouput, predictions)
+        self.rounded_predictions = tf.round(predictions)
+        self.accuracy = self._init_accuracy(real_ouput, self.rounded_predictions)
+        self.precision = tf.metrics.precision(real_ouput, self.rounded_predictions)
+        self.recall = tf.metrics.recall(real_ouput, self.rounded_predictions)
         self.global_step = self._get_or_create_global_step(graph=self.graph)
         self.logger.info('model:_initialize \t global_step={}'.format(self.global_step))
         if self.MODE == 'TRAIN':
@@ -105,7 +106,7 @@ class Model(object):
         )
 
     def _init_accuracy(self, real_ouput, predictions):
-        correct_prediction = tf.equal(real_ouput, tf.round(predictions))
+        correct_prediction = tf.equal(real_ouput, predictions)
         return tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
     def _init_prediction(self, logits):
