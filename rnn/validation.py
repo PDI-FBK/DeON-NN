@@ -1,4 +1,4 @@
-from rnn.model import Test
+from rnn.test import Test
 import os
 
 

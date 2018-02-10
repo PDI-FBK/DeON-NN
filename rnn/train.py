@@ -31,14 +31,17 @@ class Train(Model):
             self.optimizer,
             self.y,
             self.rounded_predictions,
+            self.accuracy_2,
             self.global_step])
         self._step = res[-1]
         self.logger.info('{} loss={}, accuracy={}'.format(self.MODE, res[1], res[2]))
+        self.logger.info('{} accuracy_2={}'.format(self.MODE, res[9]))
         self.logger.info('{} precision={}, recall={}'.format(self.MODE, res[3], res[4]))
         self.logger.info('{} global_step={}'.format(self.MODE, res[-1]))
 
         metric = {
             'accuracy': res[2],
+            'accuracy_2': res[9],
             'loss': res[1],
             'precision': res[3][0],
             'recall': res[4][0],

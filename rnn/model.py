@@ -2,6 +2,7 @@ import tensorflow as tf
 import logging
 from rnn.logits import Logits
 import rnn.data as data
+from tensorflow.python.ops import math_ops
 
 
 class Model(object):
@@ -12,6 +13,7 @@ class Model(object):
         self.graph = tf.get_default_graph()
         self.loss = None
         self.accuracy = None
+        self.accuracy_2 = None
         self.global_step = None
         self.tvars = None
         self.summary_op = None
@@ -73,6 +75,7 @@ class Model(object):
     def _initialize(self, real_ouput, predictions, optimizer):
         self.rounded_predictions = tf.round(predictions)
         self.accuracy = self._init_accuracy(real_ouput, self.rounded_predictions)
+        self.accuracy_2 = self._init_accuracy_2(real_ouput, self.rounded_predictions)
         self.precision = tf.metrics.precision(real_ouput, self.rounded_predictions)
         self.recall = tf.metrics.recall(real_ouput, self.rounded_predictions)
         self.global_step = self._get_or_create_global_step(graph=self.graph)
@@ -108,6 +111,12 @@ class Model(object):
     def _init_accuracy(self, real_ouput, predictions):
         correct_prediction = tf.equal(real_ouput, predictions)
         return tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+    def _init_accuracy_2(self, real_ouput, predictions):
+        if real_ouput.dtype != predictions.dtype:
+            predictions = math_ops.cast(predictions, real_ouput.dtype)
+        is_correct = math_ops.to_float(math_ops.equal(predictions, real_ouput))
+        return math_ops.reduce_mean(is_correct)
 
     def _init_prediction(self, logits):
         predictions = tf.sigmoid(logits)
