@@ -1,6 +1,5 @@
 from rnn.train import Train
-from rnn.test import Test
-from rnn.validation import Validation
+from rnn.test_model import Test, Validation
 from datetime import datetime
 
 

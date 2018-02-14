@@ -14,9 +14,9 @@ class Train(Model):
             self.logger = config.logger
             self._step = 0
             self.max_steps = config.train.steps
+            self.inputfile = config.train.inputfile
             self.build(
                 config,
-                config.train.inputfile,
                 config.train.batch_size,
                 keep_prob=config.train.keep_prob)
 

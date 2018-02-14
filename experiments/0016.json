@@ -1,0 +1,43 @@
+{
+    "name": "0016",
+    "emb_dim": 256,
+    "hidden_size": 512,
+    "validate_every_steps": 200,
+    "num_layers": 3,
+    "vocab_input_size": 633661,
+    "vocab_ouput_size": 1,
+    "seed": 23,
+    "cell": {
+        "class": "LayerNormBasicLSTMCell",
+        "params": {}
+    },
+    "optimizer":{
+        "class": "AdamOptimizer",
+        "params": {
+            "learning_rate": 0.001
+        }
+    },
+    "saver_result_path": "/mnt",
+    "summaries": "summaries",
+    "checkpoint": "checkpoint",
+    "train": {
+        "file.rio": "/home/pdi_unit/storage/dataset/balanced-no-wcl-80-20/train.tsv.rio",
+        "file.tsv": "/home/pdi_unit/storage/dataset/balanced-no-wcl-80-20/train.tsv",
+        "device": "GPU:0",
+        "batch_size": 200,
+        "epochs": 10,
+        "keep_prob": 0.8
+    },
+    "test": {
+        "file.rio": "/home/pdi_unit/storage/dataset/balanced-no-wcl-80-20/wcl.tsv.rio",
+        "file.tsv": "/home/pdi_unit/storage/dataset/balanced-no-wcl-80-20/wcl.tsv",
+        "device": "CPU:0",
+        "batch_size": 1000
+    },
+    "validation": {
+        "file.rio": "/home/pdi_unit/storage/dataset/balanced-no-wcl-80-20/validation.tsv.rio",
+        "file.tsv": "/home/pdi_unit/storage/dataset/balanced-no-wcl-80-20/validation.tsv",
+        "device": "CPU:0",
+        "batch_size": 1000
+    }
+}

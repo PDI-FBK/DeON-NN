@@ -21,6 +21,7 @@ class Model(object):
         self.logger = logging
         self._checkpoint = tf.train.latest_checkpoint(checkpoint_dir)
         self.MODE = 'TRAIN'
+        self.inputfile = None
 
     def next(self):
         with self.sess as sess:
@@ -54,8 +55,8 @@ class Model(object):
     def summarize(self):
         raise NotImplementedError
 
-    def build(self, config, file, batch_size, keep_prob=1):
-        tensor = self._get_tensor(file, batch_size, config.seed)
+    def build(self, config, batch_size, keep_prob=1):
+        tensor = self._get_tensor(self.inputfile, batch_size, config.seed)
         x = tensor['words']
         self.y = tensor['definition']
         self.keep_prob = tf.placeholder(tf.float32)
