@@ -11,12 +11,14 @@ import os
 
 @click.command()
 @click.option('--config')
-@click.option('--force', is_flag=True)
-def run(config, force):
+@click.option('--train/--no-train', default=True)
+@click.option('--test/--no-test', default=True)
+@click.option('--validation/--no-validation', default=True)
+def run(config, train, test, validation):
     basedir, _ = tuple(os.path.split(config))
     config = Config(json.load(open(config)), basedir)
 
-    Main(config).run(force)
+    Main(config).run(train, test, validation)
     pass
 
 if __name__ == '__main__':
