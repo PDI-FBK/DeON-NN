@@ -1,6 +1,7 @@
 import os
 import logging
 import tensorflow as tf
+import glob
 
 
 class Config():
@@ -49,15 +50,23 @@ class Config():
         logger.setLevel(logging.DEBUG)
         return logger
 
+    def __str__(self):
+        return'TRAIN {} \nTEST {}\nVALIDATION{}'.format(
+            self.train, self.test, self.validation)
+
     class Train():
 
         def __init__(self, params, basedir):
             self.inputfile = os.path.join(basedir, params['file.rio'])
             self.device = params["device"]
             self.batch_size = params["batch_size"]
-            self.steps = params['epochs'] * Config.one_epoch_steps(
-                params['file.tsv'], self.batch_size)
+            file_length = sum([Config.count_lines(f) for f in glob.glob(params['file.tsv'])])
+            self.steps = params['epochs'] * (file_length // self.batch_size)
             self.keep_prob = params['keep_prob']
+
+        def __str__(self):
+            return 'device {}\tbatch size {}\tsteps {}'.format(
+                self.device, self.batch_size, self.steps)
 
     class Test():
 
@@ -69,6 +78,10 @@ class Config():
                 params['file.tsv'], self.batch_size)
             self.keep_prob = 1
 
+        def __str__(self):
+            return 'device {}\tbatch size {}\tsteps {}'.format(
+                self.device, self.batch_size, self.steps)
+
     class Validation():
 
         def __init__(self, params, basedir):
@@ -78,6 +91,10 @@ class Config():
             self.steps = Config.one_epoch_steps(
                 params['file.tsv'], self.batch_size)
             self.keep_prob = 1
+
+        def __str__(self):
+            return 'device {}\tbatch size {}\tsteps {}'.format(
+                self.device, self.batch_size, self.steps)
 
     class Optimizer():
 
@@ -100,9 +117,13 @@ class Config():
             except:
                 raise RuntimeError(unresolve.format(self.name))
 
-    def one_epoch_steps(tsv_file, batch_size):
+    def count_lines(file):
         f_len = 0
-        with open(tsv_file, 'r') as f:
+        with open(file, 'r') as f:
             for _ in f:
                 f_len += 1
+        return f_len
+
+    def one_epoch_steps(tsv_file, batch_size):
+        f_len = Config.count_lines(tsv_file)
         return f_len // batch_size

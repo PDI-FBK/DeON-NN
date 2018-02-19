@@ -28,7 +28,7 @@ def parse(serialized):
 
 def read_from_files(file_patterns, shuffle=True, num_epochs=None, seed=None):
     files = list(itertools.chain(*[tf.gfile.Glob(p) for p in file_patterns]))
-    fqueue = tf.train.string_input_producer(
+    fqueue = tf.train.string_input_producer(# code random sui nomi dei file
         files, num_epochs=num_epochs, shuffle=shuffle, name='FilenameQueue', seed=seed)
     reader = tf.TFRecordReader(name='TFRecordReader')
     _, value = reader.read(fqueue, name='Read')
@@ -38,7 +38,7 @@ def read_from_files(file_patterns, shuffle=True, num_epochs=None, seed=None):
 
 def inputs(file_patterns, batch_size, shuffle=True, num_epochs=None, seed=None):
     """Build the input pipeline."""
-    min_after_dequeue = 2000
+    min_after_dequeue = 20000
     num_threads = 4
     safety_margin = 2
     capacity = (min_after_dequeue + (num_threads + safety_margin) * batch_size)

@@ -7,11 +7,14 @@ class Main(object):
     """docstring for Rnn"""
     def __init__(self, config):
         self.config = config
-
+        print(self.config)
         self.validate_every_steps = config.validate_every_steps
         self.model_checkpoint = config.model_checkpoint
         self.train_model = Train(config)
         self.logger = config.logger
+
+        self.validation_accuracy = []
+        self.status = None
 
     def run(self, run_train, run_test, run_validation):
         if run_train:
@@ -27,10 +30,16 @@ class Main(object):
                     self.logger.info('Real={}'.format(res[7]))
                     self.logger.info('Predicted={}'.format(res[8]))
                     self.logger.info('Saving checkpoint into {}'.format(self.model_checkpoint))
-                    self.train_model.save_checkpoint(self.model_checkpoint, step)
                     self.test_validate(run_test, run_validation)
+                    if self.status == 'SAVE':
+                        self.train_model.save_checkpoint(self.model_checkpoint, step)
+                    if self.status == 'STOP':
+                        self.logger.info('Validation is not improving. STOP')
+                        break
+
             self.logger.info('Finished all epochs. Last test and validation.')
         self.test_validate(run_test, run_validation)
+        self.logger.info('DONE')
 
     def test_validate(self, run_test, run_validation):
         if run_test:
@@ -47,6 +56,18 @@ class Main(object):
         self.logger.info('Run validation')
         model = Validation(self.config)
         self._run_model(model, 'validation')
+        mean_acc = model.mean_accuracy()
+        self.early_stop(mean_acc)
+
+    def early_stop(self, mean_acc):
+        if len(self.validation_accuracy) > 0 and self.validation_accuracy[0] < mean_acc:
+            self.validation_accuracy = []
+            self.status = 'SAVE'
+        else:
+            self.status = None
+        self.validation_accuracy.append(mean_acc)
+        if len(self.validation_accuracy) >= 13:
+            self.status = 'STOP'
 
     def _run_model(self, model, mode):
         start = datetime.now()
