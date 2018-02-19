@@ -3,13 +3,15 @@
     "emb_dim": 256,
     "hidden_size": 512,
     "validate_every_steps": 200,
-    "num_layers": 2,
-    "vocab_input_size": 633661,
+    "num_layers": 1,
+    "vocab_input_size": 514336,
     "vocab_ouput_size": 1,
     "seed": 23,
     "cell": {
-        "class": "GRUCell",
-        "params": {}
+        "class": "BasicLSTMCell",
+        "params": {
+            "forget_bias": 0.0
+        }
     },
     "optimizer":{
         "class": "AdamOptimizer",
@@ -21,22 +23,22 @@
     "summaries": "summaries",
     "checkpoint": "checkpoint",
     "train": {
-        "file.rio": "/home/pdi_unit/storage/dataset/balanced-no-wcl-80-20/train.tsv.rio",
-        "file.tsv": "/home/pdi_unit/storage/dataset/balanced-no-wcl-80-20/train.tsv",
+        "file.rio": "/home/pdi_unit/storage/dataset/balanced-all-90-10-gold/train.*.rio",
+        "file.tsv": "/home/pdi_unit/storage/dataset/balanced-all-90-10-gold/train.*.tsv",
         "device": "GPU:0",
-        "batch_size": 400,
+        "batch_size": 800,
         "epochs": 10,
         "keep_prob": 0.8
     },
     "test": {
-        "file.rio": "/home/pdi_unit/storage/dataset/balanced-no-wcl-80-20/wcl.tsv.rio",
-        "file.tsv": "/home/pdi_unit/storage/dataset/balanced-no-wcl-80-20/wcl.tsv",
+        "file.rio": "/home/pdi_unit/storage/dataset/balanced-all-90-10-gold/test.tsv.rio",
+        "file.tsv": "/home/pdi_unit/storage/dataset/balanced-all-90-10-gold/test.tsv",
         "device": "CPU:0",
         "batch_size": 1000
     },
     "validation": {
-        "file.rio": "/home/pdi_unit/storage/dataset/balanced-no-wcl-80-20/validation.tsv.rio",
-        "file.tsv": "/home/pdi_unit/storage/dataset/balanced-no-wcl-80-20/validation.tsv",
+        "file.rio": "/home/pdi_unit/storage/dataset/balanced-all-90-10-gold/validation.tsv.rio",
+        "file.tsv": "/home/pdi_unit/storage/dataset/balanced-all-90-10-gold/validation.tsv",
         "device": "CPU:0",
         "batch_size": 1000
     }
