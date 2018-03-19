@@ -1,20 +1,21 @@
 {
-    "name": "0009",
+    "name": "0033",
     "emb_dim": 256,
     "hidden_size": 512,
     "validate_every_steps": 200,
-    "num_layers": 3,
+    "num_layers": 2,
     "vocab_input_size": 514336,
     "vocab_ouput_size": 1,
     "seed": 23,
     "cell": {
-        "class": "GRUCell",
-        "params": {}
+        "class": "LayerNormBasicLSTMCell",
+        "params": {
+        }
     },
     "optimizer":{
         "class": "AdamOptimizer",
         "params": {
-            "learning_rate": 0.0001
+            "learning_rate": 0.0005
         }
     },
     "saver_result_path": "/mnt",

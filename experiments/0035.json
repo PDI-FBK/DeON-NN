@@ -1,5 +1,5 @@
 {
-    "name": "0009",
+    "name": "0035",
     "emb_dim": 256,
     "hidden_size": 512,
     "validate_every_steps": 200,
@@ -8,13 +8,14 @@
     "vocab_ouput_size": 1,
     "seed": 23,
     "cell": {
-        "class": "GRUCell",
-        "params": {}
+        "class": "LayerNormBasicLSTMCell",
+        "params": {
+        }
     },
     "optimizer":{
         "class": "AdamOptimizer",
         "params": {
-            "learning_rate": 0.0001
+            "learning_rate": 0.0005
         }
     },
     "saver_result_path": "/mnt",
@@ -24,7 +25,7 @@
         "file.rio": "/home/pdi_unit/storage/dataset/balanced-all-90-10-gold/train.*.rio",
         "file.tsv": "/home/pdi_unit/storage/dataset/balanced-all-90-10-gold/train.*.tsv",
         "device": "GPU:0",
-        "batch_size": 300,
+        "batch_size": 200,
         "epochs": 10,
         "keep_prob": 0.8
     },
