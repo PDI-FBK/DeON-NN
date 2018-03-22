@@ -1,0 +1,43 @@
+{
+    "name": "0007",
+    "emb_dim": 256,
+    "hidden_size": 512,
+    "validate_every_steps": 200,
+    "num_layers": 3,
+    "vocab_input_size": 514336,
+    "vocab_ouput_size": 1,
+    "seed": 23,
+    "cell": {
+        "class": "GRUCell",
+        "params": {}
+    },
+    "optimizer":{
+        "class": "AdamOptimizer",
+        "params": {
+            "learning_rate": 0.001
+        }
+    },
+    "saver_result_path": "/mnt",
+    "summaries": "summaries",
+    "checkpoint": "checkpoint",
+    "train": {
+        "file.rio": "/home/pdi_unit/storage/dataset/balanced-all-90-10-gold/train.*.rio",
+        "file.tsv": "/home/pdi_unit/storage/dataset/balanced-all-90-10-gold/train.*.tsv",
+        "device": "GPU:0",
+        "batch_size": 300,
+        "epochs": 10,
+        "keep_prob": 1
+    },
+    "test": {
+        "file.rio": "/home/pdi_unit/storage/dataset/balanced-all-90-10-gold/test.tsv.rio",
+        "file.tsv": "/home/pdi_unit/storage/dataset/balanced-all-90-10-gold/test.tsv",
+        "device": "CPU:0",
+        "batch_size": 1000
+    },
+    "validation": {
+        "file.rio": "/home/pdi_unit/storage/dataset/balanced-all-90-10-gold/validation.tsv.rio",
+        "file.tsv": "/home/pdi_unit/storage/dataset/balanced-all-90-10-gold/validation.tsv",
+        "device": "CPU:0",
+        "batch_size": 1000
+    }
+}
